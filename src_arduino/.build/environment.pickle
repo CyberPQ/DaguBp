@@ -1827,7 +1827,7 @@ p963
 tp964
 a(S'build_dir'
 p965
-S'.build/uno'
+S'.build/atmega8'
 p966
 tp967
 a(S'cc'

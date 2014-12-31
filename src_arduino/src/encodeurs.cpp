@@ -56,7 +56,7 @@ void encodeurs_setup()
 //   distance parcourue par le centre du robot
 int encodeurs_get_distance()
 {
-  return ( (encoderLeftCount+encoderRightCount) >> 1);
+  return ( (encoderLeftCount+encoderRightCount) / 2 );
 }
 
 //-------------------------------------------------
@@ -68,5 +68,13 @@ int encodeurs_get_angle()
   return (encoderLeftCount-encoderRightCount);
 }
 
+int encodeurs_get_left()
+{
+  return encoderLeftCount;
+}
 
+int encodeurs_get_right()
+{
+  return encoderRightCount;
+}
 
