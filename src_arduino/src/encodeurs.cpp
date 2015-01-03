@@ -14,6 +14,9 @@
 #define RIGHT_A  3  // it externe
 #define RIGHT_B  4
 
+#define cm2count  ((double) 17.6839)
+#define count2cm  ((double) 1/17.6839)
+
 //variables
 static volatile int encoderLeftCount = 0;
 static volatile int encoderRightCount = 0;
@@ -57,6 +60,11 @@ void encodeurs_setup()
 int encodeurs_get_distance()
 {
   return ( (encoderLeftCount+encoderRightCount) / 2 );
+}
+
+double encodeurs_get_distance_cm()
+{
+  return ( (double)(encodeurs_get_distance()) * count2cm );
 }
 
 //-------------------------------------------------
