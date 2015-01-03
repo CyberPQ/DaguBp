@@ -14,13 +14,6 @@
 unsigned long timeOld;
 
 volatile boolean changeFlag = false;
-volatile int vitesse = 255;
-
-float cmd_v_g=0;
-float cmd_v_d=0;
-#define CMD_STEP 0.05f
-int consigne_v_g = 0;
-int consigne_v_d = 0;
 
 double Kp = 81; // 10 rad/sec, 75 phase margin
 double Ki = 14;
@@ -29,63 +22,54 @@ double Kd = 3;
 double consigne_position_cm = 0;
 double mesure_position_cm = 0;
 double cmd_vitesse_PWM = 0;
-int sampleTime = 100;
+int sampleTime = 20;
 PID motorPID(&mesure_position_cm, &cmd_vitesse_PWM, &consigne_position_cm,Kp,Ki,Kd, REVERSE); 
 
 void setup(){
-#ifdef SERIAL_SHELL
   Serial.begin(115200);
-#endif
-  
+
   encodeurs_setup();
-  
+
   pinMode(MOTOR_LEFT_DIR,OUTPUT);
   pinMode(MOTOR_LEFT_PWM,OUTPUT);
   pinMode(MOTOR_RIGHT_DIR,OUTPUT);
   pinMode(MOTOR_RIGHT_PWM,OUTPUT);
 
-  digitalWrite(MOTOR_LEFT_DIR , 1); 
+  digitalWrite(MOTOR_LEFT_DIR , 1);
   digitalWrite(MOTOR_RIGHT_DIR, 1);
- 
+
   pinMode(LED_BLEUE, OUTPUT);      // sets the digital pin 13 as output
-   
-#ifdef SERIAL_SHELL
+
    Serial.print("Batterie : ");
    // Convert the analog reading (which goes from 0 - 1023) to a voltage (0 - 5V):
    float voltage =  analogRead(A7) * (10.0 / 1023.0);
    Serial.print(voltage);
    Serial.println(" volts.");
-#endif
 
    //motorPID.SetMode(MANUAL);
    motorPID.SetMode(AUTOMATIC);
    motorPID.SetSampleTime(sampleTime);
    motorPID.SetOutputLimits(-255,255);
-   
-#ifdef SERIAL_SHELL
+
    Serial.println("ready...");
-#endif
 
    timeOld = millis();
    digitalWrite(LED_BLEUE, 1); //pour signaler la fin de l'init
 }
 
 void loop(){
-  
+
   unsigned long timeNow = millis();
 
   //Gestion de la reception d'ordres sur le port série
-#ifdef SERIAL_SHELL
   GestionRxOrdre();
-#endif
 
   //PID  des moteurs
   mesure_position_cm = encodeurs_get_distance_cm();
-  motorPID.Compute(); 
+  motorPID.Compute();
 
-  
   //Mise à jour des commande de moteurs
-  digitalWrite(MOTOR_LEFT_DIR , (cmd_vitesse_PWM>0) ? 0 : 1); 
+  digitalWrite(MOTOR_LEFT_DIR , (cmd_vitesse_PWM>0) ? 0 : 1);
   digitalWrite(MOTOR_RIGHT_DIR, (cmd_vitesse_PWM>0) ? 0 : 1);
   analogWrite(MOTOR_LEFT_PWM , abs(cmd_vitesse_PWM)); 
   analogWrite(MOTOR_RIGHT_PWM, abs(cmd_vitesse_PWM)); 
@@ -93,7 +77,7 @@ void loop(){
   if (timeNow - timeOld > 10000){
     changeFlag = true;	//provoque l'affichage des traces
     timeOld = timeNow;
-    consigne_position_cm+=5.0;
+    //consigne_position_cm+=5.0;
   }
  
   //Gestion de l'émission du statut de la carte
@@ -103,7 +87,7 @@ void loop(){
 
 }
 
-#ifdef SERIAL_SHELL
+
 
 //Gestion de la reception d'ordres sur le port série
 void GestionRxOrdre()
@@ -111,18 +95,19 @@ void GestionRxOrdre()
   if (Serial.available() > 0)
   {
     int incomingByte = Serial.read();
-    
+
     switch(incomingByte)
     {
-      case 'p' : consigne_position_cm+=30; break;
-      case 'm' : consigne_position_cm-=30; break;
-      case 'z' : motorPID.SetMode(MANUAL);
-      case 'a' : motorPID.SetMode(AUTOMATIC);
-      default  : Serial.println("commande inconnue !");
+      case 'p' : consigne_position_cm+=5; break;
+      case 'm' : consigne_position_cm-=5; break;
+      case 'z' : motorPID.SetMode(MANUAL); cmd_vitesse_PWM = 0; break;
+      case 'a' : consigne_position_cm = mesure_position_cm; motorPID.SetMode(AUTOMATIC); break;
+      default  : Serial.println("?");
     }
   }
 }
 
+#ifdef SERIAL_SHELL
 
 //Gestion de l'émission du statut de la carte
 void GestionTxStatus()
@@ -139,7 +124,7 @@ void GestionTxStatus()
     Serial.print("     SP:");
     Serial.print(consigne_position_cm);
     Serial.print("  lue:");
-    Serial.print(consigne_position_cm);
+    Serial.print(mesure_position_cm);
 
     Serial.print("       vg:");
     Serial.print(cmd_v_g);
