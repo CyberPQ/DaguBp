@@ -41,7 +41,7 @@ void setup(){
   pinMode(LED_BLEUE, OUTPUT);      // sets the digital pin 13 as output
 
    Serial.print("Batterie : ");
-   // Convert the analog reading (which goes from 0 - 1023) to a voltage (0 - 5V):
+   // Convert the analog reading (which goes from 0 - 1023) to a voltage (0 - 10V):
    float voltage =  analogRead(A7) * (10.0 / 1023.0);
    Serial.print(voltage);
    Serial.println(" volts.");

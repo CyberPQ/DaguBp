@@ -14,8 +14,8 @@
 #define RIGHT_A  3  // it externe
 #define RIGHT_B  4
 
-#define cm2count  ((double) 17.6839)
-#define count2cm  ((double) 1/17.6839)
+#define cm2count  ((double) 17.6839 / 4.0)
+#define count2cm  ((double) 1/cm2count)
 
 //variables
 static volatile int encoderLeftCount = 0;
