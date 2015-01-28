@@ -9,9 +9,9 @@
 #include "../lib/digitalWriteFast.h"
 
 //Pinout des codeurs en quadrature
-#define LEFT_A   2 // it externe IT_0
+#define LEFT_A   2  // it externe IT_0
 #define LEFT_B   5
-#define RIGHT_A  3  // it externe
+#define RIGHT_A  3  // it externe IT_1
 #define RIGHT_B  4
 
 #define cm2count  ((double) 17.6839)
