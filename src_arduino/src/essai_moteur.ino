@@ -74,16 +74,14 @@ void loop(){
   analogWrite(MOTOR_LEFT_PWM , abs(cmd_vitesse_PWM)); 
   analogWrite(MOTOR_RIGHT_PWM, abs(cmd_vitesse_PWM)); 
 
-  if (timeNow - timeOld > 10000){
+  if (timeNow - timeOld > 1000){
     changeFlag = true;	//provoque l'affichage des traces
     timeOld = timeNow;
     //consigne_position_cm+=5.0;
   }
  
   //Gestion de l'émission du statut de la carte
-#ifdef SERIAL_SHELL
   GestionTxStatus();
-#endif
 
 }
 
@@ -107,8 +105,6 @@ void GestionRxOrdre()
   }
 }
 
-#ifdef SERIAL_SHELL
-
 //Gestion de l'émission du statut de la carte
 void GestionTxStatus()
 {
@@ -121,17 +117,21 @@ void GestionTxStatus()
     Serial.print("  a:");
     Serial.print(encodeurs_get_angle());
 
+    Serial.print("      L:");
+    Serial.print(encodeurs_get_left());
+    Serial.print("  R:");
+    Serial.print(encodeurs_get_right());
+
     Serial.print("     SP:");
     Serial.print(consigne_position_cm);
     Serial.print("  lue:");
     Serial.print(mesure_position_cm);
 
     Serial.print("       vg:");
-    Serial.print(cmd_v_g);
+    Serial.print(cmd_vitesse_PWM);
     Serial.print("  vd:");
-    Serial.println(cmd_v_d);
+    Serial.println(cmd_vitesse_PWM);
     digitalWrite(LED_BLEUE, 0);
   }
 }
-#endif
 
