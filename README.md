@@ -1,7 +1,20 @@
 DaguBp
 ======
 
-Baptiste's Dagu Rover, based on a Raspberry Pi and an Arduino
+Baptiste's Dagu Rover, based on a Raspberry Pi and an Arduino.
+
+Software Requirements
+----------------------
+*to be done...*
+
+```bash
+	sudo apt-get update 
+	sudo apt-get install arduino picocom git i2c-tools  
+	sudo apt-get install python-dev python-setuptools python-pip python-smbus
+	pip install ino
+	cd ~
+	git clone https://github.com/CyberPQ/DaguBp.git
+```
 
 
 Electrical connexions
@@ -22,7 +35,7 @@ Dagu Rover right track:
 
 Arduino programming
 --------------------
-The arduino board **Dagu Mini-Driver** can be programmed directly from the Raspberry Pi, using the **INO tool** software.
+The arduino board **Dagu Mini-Driver** (http://www.dagurobot.com/goods.php?id=142) can be programmed directly from the Raspberry Pi, using the **INO tool** software (http://inotool.org/).
 
 To build the firmware and upload it onto the **Dagu Mini-Driver** :
 
