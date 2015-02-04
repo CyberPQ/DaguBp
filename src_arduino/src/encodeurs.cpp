@@ -14,7 +14,7 @@
 #define RIGHT_A  3  // it externe IT_1
 #define RIGHT_B  4
 
-#define cm2count  ((double) 17.6839)
+#define cm2count  ((double) 17.6839 / 2)
 #define count2cm  ((double) 1/cm2count)
 
 //variables
@@ -60,6 +60,12 @@ void encodeurs_setup()
       pinMode(RIGHT_A,INPUT);
       pinMode(RIGHT_B,INPUT);
       
+      // turn on pullup resistor
+      digitalWrite(LEFT_A, HIGH);
+      digitalWrite(LEFT_B, HIGH);
+      digitalWrite(RIGHT_A, HIGH);
+      digitalWrite(RIGHT_B, HIGH);
+                  
       attachInterrupt(0, encoderInt_left,  CHANGE);
       attachInterrupt(1, encoderInt_right, CHANGE);
 }
