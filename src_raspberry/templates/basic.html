@@ -1,0 +1,159 @@
+﻿<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<script src="jquery.min.js"></script>
+		
+		<style>
+		body {
+			overflow	: hidden;
+			padding		: 0;
+			margin		: 0;
+			background-color: #BBB;
+		}
+		#info {
+			position	: absolute;
+			top		: 0px;
+			width		: 100%;
+			padding		: 5px;
+			text-align	: center;
+		}
+		#info a {
+			color		: #66F;
+			text-decoration	: none;
+		}
+		#info a:hover {
+			text-decoration	: underline;
+		}
+		#container {
+			width		: 100%;
+			height		: 100%;
+			overflow	: hidden;
+			padding		: 0;
+			margin		: 0;
+			-webkit-user-select	: none;
+			-moz-user-select	: none;
+		}
+		</style>
+	</head>
+	<body>
+		<div id="container"></div>
+		<div id="info">
+			<a href="http://learningthreejs.com/blog/2011/12/26/let-s-make-a-3d-game-virtual-joystick/" target="_blank">VirtualJoystick.js</a>
+			A library javascript to provide a virtual joystick on touchscreen.
+			-
+			inspired by this
+			<a href="http://sebleedelisle.com/2011/04/multi-touch-game-controller-in-javascripthtml5-for-ipad/">post</a>
+			from
+			<a href="http://sebleedelisle.com/">seb.ly</a>
+			<br/>
+			Touch the screen and move
+			-
+			works with mouse too as debug
+			<br/>
+			<span id="result"></span>
+            <br>
+			<span id="log">log</span>
+		</div> 
+		<script src="../virtualjoystick.js"></script>
+		<script>
+			console.log("touchscreen is", VirtualJoystick.touchScreenAvailable() ? "available" : "not available");
+	
+			var joystick = new VirtualJoystick({
+						container	: document.getElementById('container'),
+						mouseSupport: true,
+						stationaryBase: true,
+						baseX: 200,
+						baseY: 200,
+						limitStickTravel: true,
+						stickRadius: 255
+						});
+						
+			//var joystick	= new VirtualJoystick({
+			//	container	: document.getElementById('container'),
+			//	mouseSupport	: true,
+			//});
+						
+			joystick.addEventListener('touchStart', function(){
+				console.log('down');
+				var logEl	= document.getElementById('log');
+				logEl.innerHTML	= '<b>START</b>';
+				cmd_chenilleXY(0, 0);
+			})
+			
+			joystick.addEventListener('touchEnd', function(){
+				console.log('up');
+				var logEl	= document.getElementById('log');
+				logEl.innerHTML	= '<b>STOP</b>';
+				cmd_chenilleXY(0, 0);
+			})
+			
+			joystick.addEventListener('touchMove', function(evt){
+				evt.preventDefault();
+				console.log('move');
+				var logEl	= document.getElementById('log');
+				logEl.innerHTML	= '<b>MOVE</b>';
+				cmd_chenilleXY(joystick.deltaX(), joystick.deltaY());
+			})
+			
+			// Rafraichissement periodique de l'etat du robot
+			function refresh_etat()
+			{
+				$.getJSON('/maj_etat', function(data)
+					{
+						// Ici, rafraichir l'IHM selon des donnees reçue
+						
+						// Relance du timer pour rafraichissement en boucle
+						timerVar = setTimeout(function(){refresh_piste();},1000);
+
+					});
+			}
+
+			// demande d'allumage des lasers
+			function demande_allumage(no_laser)
+			{
+				$.getJSON('/allume_laser/'+no_laser, function(data)
+					{
+						//rien a faire
+					});
+			}
+
+			// fonction permettant de cacher la barre d'adresse, en particulier sur smartphone
+			function hideAddressBar()
+			{
+				if(!window.location.hash)
+				{
+					if(document.height < window.outerHeight)
+					{
+						document.body.style.height = (window.outerHeight + 50) + 'px';
+					}
+
+					setTimeout( function(){ window.scrollTo(0, 1); }, 50 );
+				}
+			}
+			
+			// fonction de pilotage des chenilles en mode Gauche/Droite
+			function cmd_chenilleXY(delta_X, delta_Y)
+			{
+				$.getJSON('/cmd_chenilleXY/'+delta_X+'/'+delta_Y, function(data)
+					{
+						//rien a faire
+					});
+			}
+			
+			//cmd_chenilleGD(70, 70);
+
+			setInterval(function(){
+				var outputEl	= document.getElementById('result');
+				//cmd_chenilleGD((int)joystick.deltaX(), (int)joystick.deltaY());
+				outputEl.innerHTML	= '<b>Result:</b> '
+					+ ' dx:'+joystick.deltaX()
+					+ ' dy:'+joystick.deltaY()
+					+ (joystick.right()	? ' right'	: '')
+					+ (joystick.up()	? ' up'		: '')
+					+ (joystick.left()	? ' left'	: '')
+					+ (joystick.down()	? ' down' 	: '');
+			}, 1/30 * 1000);
+		</script>
+	</body>
+</html>

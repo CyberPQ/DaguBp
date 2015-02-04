@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+
+<head>
+	<title>Dagu Rover de BPR</title>
+	<meta charset="UTF-8" />    
+	<meta name="viewport" content="width=device-width; height=device-height; initial-scale=1.0; maximum-scale=1.0;"> 
+    <meta name="apple-mobile-web-app-capable" content="yes">
+	
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='IHM.css') }}" media="screen" />
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='IHM.css') }}" media="handheld" />
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='IHM.css') }}" media="print" />
+	
+	<!-- <script src="{{ url_for('static', filename='hand.minified.js') }}"></script> -->
+	<script src="{{ url_for('static', filename='hand.js') }}"></script>
+    <script src="{{ url_for('static', filename='Collection.js') }}"></script>
+    <script src="{{ url_for('static', filename='Touches.js') }}"></script>
+	
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+</head>
+
+<body>
+
+        <div class="info">
+			<h1>ROVER BPR</h1>
+			<h2>IP : {{ IP }}</h2>
+		</div>			
+		
+		<!--
+		<iframe height="400" src="http://david.blob.core.windows.net/html5/touchjoystick/Touches.html" width="800" scrolling="no"></iframe>
+		-->
+
+		<div class="container">
+			<canvas id="canvasSurface" width="10" height="10"></canvas>
+		</div>
+		
+
+
+
+</body>
+
+<script type=text/javascript>
+
+	// Rafraichissement périodique de l'état du robot
+	function refresh_etat()
+	{
+		$.getJSON('/maj_etat', function(data)
+			{
+				// Ici, rafraichir l'IHM selon des données reçue
+				
+				// Relance du timer pour rafraichissement en boucle
+                timerVar = setTimeout(function(){refresh_piste();},1000);
+
+			});
+	}
+
+	// demande d'allumage des lasers
+    function demande_allumage(no_laser)
+	{
+		$.getJSON('/allume_laser/'+no_laser, function(data)
+			{
+				//rien à faire
+			});
+	}
+
+	// fonction permettant de cacher la barre d'adresse, en particulier sur smartphone
+    function hideAddressBar()
+    {
+        if(!window.location.hash)
+        {
+            if(document.height < window.outerHeight)
+            {
+                document.body.style.height = (window.outerHeight + 50) + 'px';
+            }
+
+            setTimeout( function(){ window.scrollTo(0, 1); }, 50 );
+        }
+    }
+	
+	// fonction de pilotage des chenilles en mode Gauche/Droite
+    function cmd_chenilleGD(CmdGauche, CmdDroite)
+	{
+		$.getJSON('/cmd_chenilleGD/'+CmdGauche+'/'+CmdDroite, function(data)
+			{
+				//rien à faire
+			});
+	}
+
+    // A la fin du chargement de la page, mise en place des actions jQuery sur certains éléments
+	jQuery(function($){
+
+        //pour cacher la barre d'adresse
+        hideAddressBar();
+
+		// finalement, lancement du rafraichissement
+        refresh_etat() ;
+
+	});
+
+    // Recacher la barre d'adresse à chaque changement d'orientation du smartphone
+    $(window).on("orientationchange",function(){
+        hideAddressBar();
+    });
+
+	</script>
+
+</html>
