@@ -14,7 +14,7 @@
 #define RIGHT_A  3  // it externe IT_1
 #define RIGHT_B  4
 
-#define cm2count  ((double) 17.6839 / 4.0)
+#define cm2count  ((double) 17.6839)
 #define count2cm  ((double) 1/cm2count)
 
 //variables
@@ -27,9 +27,19 @@ void encodeurs_reset()
   encoderRightCount = 0;
 }
 
+//==============================================================================================
+//
+//      Avance -->                   ______        ______
+//                      A     ------I      I------I      I--
+//      Recule <--               ______        ______
+//                      B ------I      I------I      I------
+//
+// Donc, juste après un changement d'état sur la pin A a lieu (dans le handler d'IT sur 
+// changement de pin A), si A=B, c'est qu'on avance, mais si A=/B, c'est qu'on recule.
+//==============================================================================================
 void encoderInt_left() 
 {
-  if (digitalReadFast(LEFT_B) == HIGH)
+  if (digitalReadFast(LEFT_A) == digitalReadFast(LEFT_B))
     encoderLeftCount++;
   else
     encoderLeftCount--;
@@ -37,7 +47,7 @@ void encoderInt_left()
 
 void encoderInt_right() 
 {
-  if (digitalReadFast(RIGHT_B) == HIGH)
+  if (digitalReadFast(RIGHT_A) == digitalReadFast(RIGHT_B))
     encoderRightCount++;
   else
     encoderRightCount--;
@@ -50,8 +60,8 @@ void encodeurs_setup()
       pinMode(RIGHT_A,INPUT);
       pinMode(RIGHT_B,INPUT);
       
-      attachInterrupt(0, encoderInt_left,  RISING);
-      attachInterrupt(1, encoderInt_right, RISING);
+      attachInterrupt(0, encoderInt_left,  CHANGE);
+      attachInterrupt(1, encoderInt_right, CHANGE);
 }
 
 //-------------------------------------------------
