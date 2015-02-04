@@ -1,11 +1,6 @@
 #include "PID_v1.h"
 #include "encodeurs.h"
-
-//Pinout des ponts en H de la carte
-#define MOTOR_LEFT_DIR  7
-#define MOTOR_LEFT_PWM  9
-#define MOTOR_RIGHT_DIR 8
-#define MOTOR_RIGHT_PWM 10
+#include "moteurs.h"
 
 //Autres pins
 #define LED_BLEUE 13 // LED connected to digital pin 13
@@ -20,23 +15,20 @@ double Ki = 14;
 double Kd = 3;
 
 double consigne_position_cm = 0;
+double consigne_rotation_deg = 0;
 double mesure_position_cm = 0;
-double cmd_vitesse_PWM = 0;
+double mesure_rotation_deg = 0;
+double cmd_distance_PWM = 0;
+double cmd_rotation_PWM = 0;
 int sampleTime = 20;
-PID motorPID(&mesure_position_cm, &cmd_vitesse_PWM, &consigne_position_cm,Kp,Ki,Kd, REVERSE); 
+PID distancePID(&mesure_position_cm, &cmd_distance_PWM, &consigne_position_cm,Kp,Ki,Kd, REVERSE); 
+PID rotationPID(&mesure_rotation_deg, &cmd_rotation_PWM, &consigne_rotation_deg,10,0,0, REVERSE); 
 
 void setup(){
   Serial.begin(115200);
 
   encodeurs_setup();
-
-  pinMode(MOTOR_LEFT_DIR,OUTPUT);
-  pinMode(MOTOR_LEFT_PWM,OUTPUT);
-  pinMode(MOTOR_RIGHT_DIR,OUTPUT);
-  pinMode(MOTOR_RIGHT_PWM,OUTPUT);
-
-  digitalWrite(MOTOR_LEFT_DIR , 1);
-  digitalWrite(MOTOR_RIGHT_DIR, 1);
+  moteurs_setup();
 
   pinMode(LED_BLEUE, OUTPUT);      // sets the digital pin 13 as output
 
@@ -46,10 +38,10 @@ void setup(){
    Serial.print(voltage);
    Serial.println(" volts.");
 
-   //motorPID.SetMode(MANUAL);
-   motorPID.SetMode(AUTOMATIC);
-   motorPID.SetSampleTime(sampleTime);
-   motorPID.SetOutputLimits(-255,255);
+   //distancePID.SetMode(MANUAL);
+   distancePID.SetMode(AUTOMATIC);
+   distancePID.SetSampleTime(sampleTime);
+   distancePID.SetOutputLimits(-255,255);
 
    Serial.println("ready...");
 
@@ -64,15 +56,11 @@ void loop(){
   //Gestion de la reception d'ordres sur le port série
   GestionRxOrdre();
 
-  //PID  des moteurs
+  //Pilotage des moteurs
   mesure_position_cm = encodeurs_get_distance_cm();
-  motorPID.Compute();
-
-  //Mise à jour des commande de moteurs
-  digitalWrite(MOTOR_LEFT_DIR , (cmd_vitesse_PWM>0) ? 0 : 1);
-  digitalWrite(MOTOR_RIGHT_DIR, (cmd_vitesse_PWM>0) ? 0 : 1);
-  analogWrite(MOTOR_LEFT_PWM , abs(cmd_vitesse_PWM)); 
-  analogWrite(MOTOR_RIGHT_PWM, abs(cmd_vitesse_PWM)); 
+  distancePID.Compute();
+  rotationPID.Compute();
+  moteurs_update_pwm(cmd_distance_PWM+cmd_rotation_PWM, cmd_distance_PWM-cmd_rotation_PWM);
 
   if (timeNow - timeOld > 1000){
     changeFlag = true;	//provoque l'affichage des traces
@@ -86,7 +74,6 @@ void loop(){
 }
 
 
-
 //Gestion de la reception d'ordres sur le port série
 void GestionRxOrdre()
 {
@@ -98,8 +85,8 @@ void GestionRxOrdre()
     {
       case 'p' : consigne_position_cm+=5; break;
       case 'm' : consigne_position_cm-=5; break;
-      case 'z' : motorPID.SetMode(MANUAL); cmd_vitesse_PWM = 0; break;
-      case 'a' : consigne_position_cm = mesure_position_cm; motorPID.SetMode(AUTOMATIC); break;
+      case 'z' : distancePID.SetMode(MANUAL); cmd_distance_PWM = 0; break;
+      case 'a' : consigne_position_cm = mesure_position_cm; distancePID.SetMode(AUTOMATIC); break;
       default  : Serial.println("?");
     }
   }
@@ -128,9 +115,9 @@ void GestionTxStatus()
     Serial.print(mesure_position_cm);
 
     Serial.print("       vg:");
-    Serial.print(cmd_vitesse_PWM);
+    Serial.print(cmd_distance_PWM);
     Serial.print("  vd:");
-    Serial.println(cmd_vitesse_PWM);
+    Serial.println(cmd_distance_PWM);
     digitalWrite(LED_BLEUE, 0);
   }
 }
