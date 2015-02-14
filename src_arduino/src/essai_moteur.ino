@@ -11,8 +11,8 @@ unsigned long timeOld;
 volatile boolean changeFlag = false;
 
 double Kp = 81; // 10 rad/sec, 75 phase margin
-double Ki = 14;
-double Kd = 3;
+double Ki = 10;
+double Kd = 5;
 
 double consigne_position_cm = 0;
 double consigne_rotation_deg = 0;
@@ -22,7 +22,7 @@ double cmd_distance_PWM = 0;
 double cmd_rotation_PWM = 0;
 int sampleTime = 20;
 PID distancePID(&mesure_position_cm, &cmd_distance_PWM, &consigne_position_cm,Kp,Ki,Kd, REVERSE); 
-PID rotationPID(&mesure_rotation_deg, &cmd_rotation_PWM, &consigne_rotation_deg,10,0,0, REVERSE); 
+PID rotationPID(&mesure_rotation_deg, &cmd_rotation_PWM, &consigne_rotation_deg,50,20,0, REVERSE); 
 
 void setup(){
   Serial.begin(115200);
@@ -115,9 +115,9 @@ void GestionTxStatus()
     Serial.print(mesure_position_cm);
 
     Serial.print("       vg:");
-    Serial.print(cmd_distance_PWM);
+    Serial.print(cmd_distance_PWM+cmd_rotation_PWM);
     Serial.print("  vd:");
-    Serial.println(cmd_distance_PWM);
+    Serial.println(cmd_distance_PWM-cmd_rotation_PWM);
     digitalWrite(LED_BLEUE, 0);
   }
 }
