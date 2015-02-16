@@ -22,7 +22,7 @@ double cmd_distance_PWM = 0;
 double cmd_rotation_PWM = 0;
 int sampleTime = 20;
 PID distancePID(&mesure_position_cm, &cmd_distance_PWM, &consigne_position_cm,Kp,Ki,Kd, REVERSE); 
-PID rotationPID(&mesure_rotation_deg, &cmd_rotation_PWM, &consigne_rotation_deg,50,20,0, REVERSE); 
+PID rotationPID(&mesure_rotation_deg, &cmd_rotation_PWM, &consigne_rotation_deg,500,200,0, REVERSE); 
 
 void setup(){
   Serial.begin(115200);
