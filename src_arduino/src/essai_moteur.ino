@@ -20,8 +20,8 @@ double cmd_distance_PWM = 0;
 double cmd_rotation_PWM = 0;
 int sampleTime = 20;
 
-PID distancePID(&mesure_position_cm, &cmd_distance_PWM, &consigne_position_cm,Kp,Ki,Kd, REVERSE); 
-PID rotationPID(&mesure_rotation_deg, &cmd_rotation_PWM, &consigne_rotation_deg,500,200,0, REVERSE); 
+PID distancePID(&mesure_position_cm, &cmd_distance_PWM, &consigne_position_cm,Kp,Ki,Kd, REVERSE);
+PID rotationPID(&mesure_rotation_deg, &cmd_rotation_PWM, &consigne_rotation_deg,4,1,0, DIRECT);
 
 void setup(){
   Serial.begin(115200);
@@ -37,10 +37,13 @@ void setup(){
   Serial.print(voltage);
   Serial.println(" volts.");
   
-  //distancePID.SetMode(MANUAL);
   distancePID.SetMode(AUTOMATIC);
   distancePID.SetSampleTime(sampleTime);
   distancePID.SetOutputLimits(-255,255);
+
+  rotationPID.SetMode(AUTOMATIC);
+  rotationPID.SetSampleTime(sampleTime);
+  rotationPID.SetOutputLimits(-100,100);
   
   Serial.println("ready...");
   
@@ -117,6 +120,7 @@ void GestionRxOrdre()
       case 'z' : 
       case 'Z' : 
         distancePID.SetMode(MANUAL); 
+        rotationPID.SetMode(MANUAL); 
         cmd_distance_PWM = 0; 
         cmd_rotation_PWM = 0;
         break;
@@ -126,6 +130,7 @@ void GestionRxOrdre()
         consigne_position_cm  = mesure_position_cm; 
         consigne_rotation_deg = mesure_rotation_deg;
         distancePID.SetMode(AUTOMATIC); 
+        rotationPID.SetMode(AUTOMATIC);
         break;
         
       default  : 
@@ -151,8 +156,12 @@ void GestionTxStatus()
 
     Serial.print("     SP:");
     Serial.print(consigne_position_cm);
-    Serial.print("  lue:");
+    Serial.print("/");
+    Serial.print(consigne_rotation_deg);
+    Serial.print("     lue:");
     Serial.print(mesure_position_cm);
+    Serial.print("/");
+    Serial.print(mesure_rotation_deg);
 
     Serial.print("       vg:");
     Serial.print(cmd_distance_PWM+cmd_rotation_PWM);
