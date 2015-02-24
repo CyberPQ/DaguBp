@@ -23,20 +23,24 @@ class DaguRover(object):
 			bus_nr .. I2C bus number
 			addr   .. BMA180 device address
 		"""
-		self.bus = smbus.SMBus(bus_nr)
-		self.addr = addr
+		##self.bus = smbus.SMBus(bus_nr)
+		##self.addr = addr
 
 	def set_speed(self, speed_a, speed_b):
-		self.bus.write_word_data(self.addr, DaguRover.MotorSpeedSet, (speed_b<<8)+speed_a)
+		#self.bus.write_word_data(self.addr, DaguRover.MotorSpeedSet, (speed_b<<8)+speed_a)
+		print "set_speed"
 
 	def set_dir(self, direction):
-		self.bus.write_word_data(self.addr, DaguRover.DirectionSet, (direction<<8)+direction)
+		#self.bus.write_word_data(self.addr, DaguRover.DirectionSet, (direction<<8)+direction)
+		print "set_dir"
 		
 	def set_speed_a(self, direction, speed):
-		self.bus.write_word_data(self.addr, DaguRover.MotorSetA, (speed<<8)+direction)
+		#self.bus.write_word_data(self.addr, DaguRover.MotorSetA, (speed<<8)+direction)
+		print "set_speed_a"
 
 	def set_speed_b(self, direction, speed):
-		self.bus.write_word_data(self.addr, DaguRover.MotorSetB, (speed<<8)+direction)
+		#self.bus.write_word_data(self.addr, DaguRover.MotorSetB, (speed<<8)+direction)
+		print "set_speed_b"
 
 if __name__ == '__main__':
 
