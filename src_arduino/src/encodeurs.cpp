@@ -85,7 +85,7 @@ double encodeurs_get_distance_cm()
 
 //-------------------------------------------------
 // Angle du robot (différence entre gauche et droite)
-// L'angle est positif en tournat vers la droite, comme
+// L'angle est positif en tournant vers la droite, comme
 // avec un compas géographique (=boussole)
 int encodeurs_get_angle()
 {
