@@ -37,11 +37,11 @@ void setup(){
   Serial.print(voltage);
   Serial.println(" volts.");
   
-  distancePID.SetMode(AUTOMATIC);
+  distancePID.SetMode(MANUAL);
   distancePID.SetSampleTime(sampleTime);
   distancePID.SetOutputLimits(-255,255);
 
-  rotationPID.SetMode(AUTOMATIC);
+  rotationPID.SetMode(MANUAL);
   rotationPID.SetSampleTime(sampleTime);
   rotationPID.SetOutputLimits(-100,100);
   
@@ -65,7 +65,7 @@ void loop(){
   rotationPID.Compute();
   moteurs_update_pwm(cmd_distance_PWM+cmd_rotation_PWM, cmd_distance_PWM-cmd_rotation_PWM);
 
-  if (timeNow - timeOld > 1000){
+  if (timeNow - timeOld > 100){
     //Gestion de l'émission du statut de la carte
     GestionTxStatus();
     timeOld = timeNow;
