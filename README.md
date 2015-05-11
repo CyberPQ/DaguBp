@@ -56,14 +56,16 @@ The Arduino can be control directly, using a kind of minimal shell over serial p
 
 The commands are :
 
-  - `z` : Release the motors (stop pids)
-  - `a` : Turn on the PIDs, and drives the motor as needed to the setpoint
-  - `t` : Turn on the auto-tune on PIDs (not done yet !)
-  - `p` : Ask the robot to go forward 5cm
-  - `m` : Ask the robot to go backward 5cm
-  - `w` : Ask the robot to turn left 20°
-  - `x` : Ask the robot to turn right 20°
-  - `h` : Show help
+|Cmd|Action																|
+|:-:|---------------------------------------------------------------	----|
+|`z`|Release the motors (stop pids)										|
+|`a`|Turn on the PIDs, and drives the motor as needed to the setpoint 	|
+|`t`|Turn on the auto-tune on PIDs (not done yet !)						|
+|`p`|Ask the robot to go forward 5cm									|
+|`m`|Ask the robot to go backward 5cm									|
+|`w`|Ask the robot to turn left 20Â°										|
+|`x`|Ask the robot to turn right 20Â°									|
+|`h`|Show help															|
 
 To leave the minicom software and return to bash shell, hit `<Ctrl>+<A>` then `<Ctrl>+<X>`
 
