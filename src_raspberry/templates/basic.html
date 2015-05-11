@@ -28,9 +28,9 @@
 		#container {
 			width		: 100%;
 			height		: 100%;
+			margin		: 0 auto;
 			overflow	: hidden;
 			padding		: 0;
-			margin		: 0;
 			-webkit-user-select	: none;
 			-moz-user-select	: none;
 		}
@@ -39,7 +39,7 @@
 	<body>
 		<div id="container"></div>
 		<div id="info">
-			<a href="http://learningthreejs.com/blog/2011/12/26/let-s-make-a-3d-game-virtual-joystick/" target="_blank">VirtualJoystick.js</a>
+			<!--<a href="http://learningthreejs.com/blog/2011/12/26/let-s-make-a-3d-game-virtual-joystick/" target="_blank">VirtualJoystick.js</a>
 			A library javascript to provide a virtual joystick on touchscreen.
 			-
 			inspired by this
@@ -50,7 +50,7 @@
 			Touch the screen and move
 			-
 			works with mouse too as debug
-			<br/>
+			<br/> -->
 			<span id="result"></span>
             <br>
 			<span id="log">log</span>
@@ -63,8 +63,8 @@
 						container	: document.getElementById('container'),
 						mouseSupport: true,
 						stationaryBase: true,
-						baseX: 200,
-						baseY: 200,
+						baseX: screen.width/2,
+						baseY: screen.height/2,
 						limitStickTravel: true,
 						stickRadius: 255
 						});
@@ -97,14 +97,15 @@
 			})
 			
 			// Rafraichissement periodique de l'etat du robot
+			// fonction à appeler une fois pour amorcer le rafraichissement
 			function refresh_etat()
 			{
 				$.getJSON('/maj_etat', function(data)
 					{
-						// Ici, rafraichir l'IHM selon des donnees reçue
+						// Ici, rafraichir l'IHM selon des données reçue
 						
 						// Relance du timer pour rafraichissement en boucle
-						timerVar = setTimeout(function(){refresh_piste();},1000);
+						timerVar = setTimeout(function(){refresh_etat();},1000);
 
 					});
 			}
@@ -140,9 +141,8 @@
 						//rien a faire
 					});
 			}
-			
-			//cmd_chenilleGD(70, 70);
 
+			// rafraichissement périodique de l'IHM, sans requetes
 			setInterval(function(){
 				var outputEl	= document.getElementById('result');
 				//cmd_chenilleGD((int)joystick.deltaX(), (int)joystick.deltaY());

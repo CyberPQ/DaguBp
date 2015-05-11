@@ -1,7 +1,7 @@
-﻿#! /usr/bin/python
-# -*- coding: utf-8 -*-
+﻿#!/usr/bin/python
+# vim: ai:ts=4:sw=4:sts=4:et:fileencoding=utf-8
 
-import smbus
+#import smbus
 import time
 	
 class DaguRover(object):
@@ -28,7 +28,7 @@ class DaguRover(object):
 
 	def set_speed(self, speed_a, speed_b):
 		#self.bus.write_word_data(self.addr, DaguRover.MotorSpeedSet, (speed_b<<8)+speed_a)
-		print "set_speed"
+		print "set_speed {:+5.2f} {:+5.2f}".format(speed_a, speed_b)
 
 	def set_dir(self, direction):
 		#self.bus.write_word_data(self.addr, DaguRover.DirectionSet, (direction<<8)+direction)
@@ -36,11 +36,11 @@ class DaguRover(object):
 		
 	def set_speed_a(self, direction, speed):
 		#self.bus.write_word_data(self.addr, DaguRover.MotorSetA, (speed<<8)+direction)
-		print "set_speed_a"
+		print "set_speed_a {:+5.2f} {:+5.2f}".format(direction, speed)
 
 	def set_speed_b(self, direction, speed):
 		#self.bus.write_word_data(self.addr, DaguRover.MotorSetB, (speed<<8)+direction)
-		print "set_speed_b"
+		print "set_speed_b {:+5.2f} {:+5.2f}".format(direction, speed)
 
 if __name__ == '__main__':
 

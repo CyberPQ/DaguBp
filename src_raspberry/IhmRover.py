@@ -1,4 +1,4 @@
-#! /usr/bin/python
+﻿#! /usr/bin/python
 # -*- coding: utf-8 -*-
 
 import time
@@ -10,6 +10,11 @@ from flask import Flask, render_template, request, jsonify, url_for, send_from_d
 from rover import *
 
 app = Flask(__name__)
+
+#Configuration de la verbosity de Flask, pour réduire les traces au seules erreurs
+import logging
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
 
 @app.route("/")
 def show_ihm():
@@ -55,15 +60,17 @@ def cmd_chenilleGD(CmdGauche, CmdDroite):
 	
 	#print "cmd_chenilleGD : {:+3} {:+3}".format(CmdGauche, CmdDroite)
 	
-	if(CmdGauche>0):
-		rover.set_speed_a(DaguRover.FORWARD, int(CmdGauche))
-	else:
-		rover.set_speed_a(DaguRover.REVERSE, -int(CmdGauche))
-		
-	if(CmdDroite>0):
-		rover.set_speed_b(DaguRover.FORWARD, int(CmdDroite))
-	else:
-		rover.set_speed_b(DaguRover.REVERSE, -int(CmdDroite))
+	rover.set_speed(CmdGauche, CmdDroite)
+	
+	#if(CmdGauche>0):
+	#	rover.set_speed_a(DaguRover.FORWARD, int(CmdGauche))
+	#else:
+	#	rover.set_speed_a(DaguRover.REVERSE, -int(CmdGauche))
+	#	
+	#if(CmdDroite>0):
+	#	rover.set_speed_b(DaguRover.FORWARD, int(CmdDroite))
+	#else:
+	#	rover.set_speed_b(DaguRover.REVERSE, -int(CmdDroite))
 		
 	return "OK"
 	
@@ -101,7 +108,7 @@ def cmd_chenilleXY(x, y):
 	#print "cmd_chenilleXY : {:+3} {:+3} --> {:+10.4f} {:+10.4f} {:+10.4f}".format(x, y, dist, xDeflection, yDeflection)
 	
 	#Transformation de la commande de joystick (xDeflection, yDeflection) en vitesse (Vgauche, Vdroite)
-	k = 0.8;
+	k = 0.3;
 	CmdGauche = yDeflection - k * xDeflection;
 	CmdDroite = yDeflection + k * xDeflection;
 	
@@ -113,14 +120,11 @@ def cmd_chenilleXY(x, y):
 if __name__ == "__main__":
 	rover = DaguRover(0, 0x0f) # update with your bus number and address
 	time.sleep(0.1)
-	print "Lancement du serveur Web sur le port 80 (http://127.0.0.1:80)";
-	
-	# rover.set_speed_a(DaguRover.FORWARD, 100)
-	# rover.set_speed_b(DaguRover.FORWARD, 100)
-	# time.sleep(0.5)
+	print "Lancement du serveur Web sur le port 8080 (http://127.0.0.1:8080)";
+
 	rover.set_speed_a(DaguRover.STOP, 0)
 	rover.set_speed_b(DaguRover.STOP, 0)
 	
 	app.debug=True
 	app.silent=True
-	app.run(host='0.0.0.0', port=80)
+	app.run(host='0.0.0.0', port=8080)
