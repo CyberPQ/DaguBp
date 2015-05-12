@@ -5,13 +5,12 @@ Baptiste's Dagu Rover, based on a Raspberry Pi and an Arduino.
 
 Software Requirements
 ----------------------
-*to be done...*
 
 ```bash
 	sudo apt-get update 
 	sudo apt-get install arduino picocom git i2c-tools  
 	sudo apt-get install python-dev python-setuptools python-pip python-smbus
-	sudo apt-get install build-essential python-imaging python-numpy
+	sudo apt-get install build-essential python-imaging python-numpy python-picamera
 	sudo pip install RPi.GPIO
 	sudo pip install ino
 	
