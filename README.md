@@ -11,7 +11,15 @@ Software Requirements
 	sudo apt-get update 
 	sudo apt-get install arduino picocom git i2c-tools  
 	sudo apt-get install python-dev python-setuptools python-pip python-smbus
-	pip install ino
+	sudo apt-get install build-essential python-imaging python-numpy
+	sudo pip install RPi.GPIO
+	sudo pip install ino
+	
+	cd ~
+	git clone https://github.com/adafruit/Adafruit_Python_ILI9341.git
+	cd Adafruit_Python_ILI9341
+	sudo python setup.py install
+
 	cd ~
 	git clone https://github.com/CyberPQ/DaguBp.git
 ```
