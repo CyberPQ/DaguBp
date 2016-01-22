@@ -18,4 +18,5 @@
 
 ## Sources d'informations : 
  - **AHRS en python** : https://solenerotech1.wordpress.com/2013/10/10/how-to-combine-data-from-gyro-and-accel/
+ - **BerryIMU**       : https://github.com/mwilliams03/BerryIMU/tree/master/python-LSM9DS0-gryo-accel-compass
  
