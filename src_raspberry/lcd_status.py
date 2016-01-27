@@ -31,6 +31,7 @@ import Adafruit_GPIO.SPI as SPI
 
 import socket
 import commands
+import time
 
 # Raspberry Pi configuration.
 DC = 18
@@ -80,12 +81,14 @@ def draw_rotated_text(image, text, position, angle, font, fill=(255,255,255)):
 
 # Return IP address (or addresses) as a string
 def get_lan_ip():
-	ip = commands.getoutput("hostname -I")
+	ip = " IP:" + commands.getoutput("hostname -I")
 	print(ip)
 	return ip
 
 # Write two lines of white text on the buffer, rotated 90 degrees counter clockwise.
 draw_rotated_text(disp.buffer, socket.gethostname(), 	(30, 20), 90, font, fill=(255,255,255))
+disp.display()
+time.sleep(60)
 draw_rotated_text(disp.buffer, get_lan_ip(), 		(50, 20), 90, font, fill=(255,255,255))
 
 
