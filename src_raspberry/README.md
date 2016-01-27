@@ -8,6 +8,9 @@
  - **itg3200.py**    : Gestion du Gyroscope
  - **ms5611.py**     : Cateur de pression (baromètre)
  - **lcd_status.py** : Affichage de l'adresse IP sur l'écran LCD
+ - **imu.py**        : Utilisation du MPU6050 pour mesurer l'atitude
+ 
+![alt text](https://github.com/CyberPQ/DaguBp/blob/master/src_raspberry/static/roll_pitch_yaw.gif "Axes d'atitude")
  
 ## Scripts en cours de mise au point :
  
