@@ -13,6 +13,7 @@ Software Requirements
 	sudo apt-get install build-essential python-imaging python-numpy python-picamera
 	sudo pip install RPi.GPIO
 	sudo pip install ino
+	sudo pip install flask
 	
 	cd ~
 	git clone https://github.com/adafruit/Adafruit_Python_ILI9341.git
